@@ -1,0 +1,28 @@
+{
+  "name": "Laralang.js",
+  "version": "0.0.1",
+  "description": "Translation with JavaScript Laravel-like",
+  "main": "dist/laralang.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "watch": "rollup -c -w",
+    "build": "rollup -c",
+    "test": "babel-node --no-babelrc --presets=env,stage-3 ./test/index.js"
+  },
+  "keywords": [
+    "translate",
+    "i18n",
+    "laravel"
+  ],
+  "author": "Dievardump (simon.fremaux@gmail.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "rollup-plugin-babel": "^3.0.2"
+  }
+}

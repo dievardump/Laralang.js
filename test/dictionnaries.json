@@ -1,0 +1,14 @@
+{
+	"en": {
+		"foo": {
+			"bar": "foobar"
+		},
+		"replace": "I am a :param replaced by :param2",
+		"multiple": "I am 1|I am the others",
+		"multiple-params": "{0,1} I am :param1 or :param0|I am :param3",
+		"intervals": "{2} Only 2|[0,5] Between 0 and 5 (except 2)|[6,*] Others"
+	},
+	"fr": {
+		"trout": "truite"
+	}
+}
