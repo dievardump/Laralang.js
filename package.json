@@ -16,7 +16,7 @@
     "i18n",
     "laravel"
   ],
-  "author": "Dievardump (simon.fremaux@gmail.com)",
+  "author": "dievardump (simon.fremaux@gmail.com)",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
