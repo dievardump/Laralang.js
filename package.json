@@ -2,7 +2,7 @@
   "name": "Laralang.js",
   "version": "0.0.1",
   "description": "Translation with JavaScript Laravel-like",
-  "main": "dist/laralang.js",
+  "main": "dist/index.js",
   "directories": {
     "test": "test"
   },
