@@ -1,17 +1,18 @@
 const data = {
 	dictionnaries: {},
 	locale: 'en',
-	fallback: 'en'
+	fallback: 'en',
+	returnKeyIfNotFound: false
 };
 	
-function addDictionnaries(dictionnaries = {}) {
+export function addDictionnaries(dictionnaries = {}) {
 	Object.keys(dictionnaries)
 		.forEach(locale => {
 			addDictionnary(locale, dictionnaries[locale]);
 		});
 }
 
-function addDictionnary(locale, dictionnary = {}) {
+export function addDictionnary(locale, dictionnary = {}) {
 	data.dictionnaries[locale] = {
 		...data.dictionnaries[locale],
 		...dictionnary
@@ -20,31 +21,31 @@ function addDictionnary(locale, dictionnary = {}) {
 	return data.dictionnaries[locale];
 }
 
-function setLocale(locale = data.locale) {
+export function setLocale(locale = data.locale) {
 	data.locale = locale;
 }
 
-function getLocale() {
+export function getLocale() {
 	return data.locale;
 }
 
-function isLocale(locale) {
+export function isLocale(locale) {
 	return locale === data.locale;
 }
 
-function setFallback(fallback = data.fallback) {
+export function setFallback(fallback = data.fallback) {
 	data.fallback = fallback;
 }
 
-function getFallback() {
+export function getFallback() {
 	return data.fallback;
 }
 
-function isFallback(fallback) {
+export function isFallback(fallback) {
 	return fallback === data.fallback;
 }
 
-function __(key, params = {}, locale = data.locale) {
+export function __(key, params = {}, locale = data.locale) {
 	let text = getText(key, locale);
 	if (null !== text) {
 		text = replaceParameters(text, params);
@@ -53,13 +54,18 @@ function __(key, params = {}, locale = data.locale) {
 	return text;
 }
 
-function trans_choice(key, count, params = {}, locale = data.locale) {
+export function trans_choice(key, count, params = {}, locale = data.locale) {
 	let text = getText(key, locale);
 	if (null !== text) {
 		text = selectChoice(text, count, locale);
 		text = replaceParameters(text, params);
 	}
 	return text;
+}
+
+export function setReturnKeyIfNotFound(bool = false) {
+	data.returnKeyIfNotFound = bool;
+	return data.returnKeyIfNotFound;
 }
 
 function getText(key, locale = data.locale) {
@@ -82,7 +88,7 @@ function getText(key, locale = data.locale) {
 		}
 	}
 
-	return null;
+	return data.returnKeyIfNotFound ? key : null;
 }
 
 function replaceParameters(text, params = {}) {
@@ -135,8 +141,8 @@ function convertNumber(str) {
 }
 
 // Derived from: https://github.com/symfony/translation/blob/460390765eb7bb9338a4a323b8a4e815a47541ba/Interval.php
-var intervalRegexp = /^({\s*(\-?\d+(\.\d+)?[\s*,\s*\-?\d+(\.\d+)?]*)\s*})|([\[\]])\s*(-Inf|\*|\-?\d+(\.\d+)?)\s*,\s*(\+?Inf|\*|\-?\d+(\.\d+)?)\s*([\[\]])$/;
-var anyIntervalRegexp = /({\s*(\-?\d+(\.\d+)?[\s*,\s*\-?\d+(\.\d+)?]*)\s*})|([\[\]])\s*(-Inf|\*|\-?\d+(\.\d+)?)\s*,\s*(\+?Inf|\*|\-?\d+(\.\d+)?)\s*([\[\]])/;
+const intervalRegexp = /^({\s*(\-?\d+(\.\d+)?[\s*,\s*\-?\d+(\.\d+)?]*)\s*})|([\[\]])\s*(-Inf|\*|\-?\d+(\.\d+)?)\s*,\s*(\+?Inf|\*|\-?\d+(\.\d+)?)\s*([\[\]])$/;
+const anyIntervalRegexp = /({\s*(\-?\d+(\.\d+)?[\s*,\s*\-?\d+(\.\d+)?]*)\s*})|([\[\]])\s*(-Inf|\*|\-?\d+(\.\d+)?)\s*,\s*(\+?Inf|\*|\-?\d+(\.\d+)?)\s*([\[\]])/;
 
 /**
  * From the Symfony\Component\Translation\Interval Docs
@@ -163,14 +169,14 @@ function testInterval(count, interval) {
 
 	interval = interval.trim();
 
-	var matches = interval.match(intervalRegexp);
+	let matches = interval.match(intervalRegexp);
 	if (!matches) {
 		throw 'Invalid interval: ' + interval;
 	}
 
 	if (matches[2]) {
-		var items = matches[2].split(',');
-		for (var i = 0; i < items.length; i++) {
+		const items = matches[2].split(',');
+		for (let i = 0; i < items.length; i++) {
 			if (parseInt(items[i], 10) === count) {
 				return true;
 			}
@@ -181,13 +187,13 @@ function testInterval(count, interval) {
 			return !!match;
 		});
 
-		var leftDelimiter = matches[1];
-		var leftNumber = convertNumber(matches[2]);
+		const leftDelimiter = matches[1];
+		let leftNumber = convertNumber(matches[2]);
 		if (leftNumber === Infinity) {
 			leftNumber = -Infinity;
 		}
-		var rightNumber = convertNumber(matches[3]);
-		var rightDelimiter = matches[4];
+		const rightNumber = convertNumber(matches[3]);
+		const rightDelimiter = matches[4];
 
 		return (leftDelimiter === '[' ? count >= leftNumber : count > leftNumber)
 			&& (rightDelimiter === ']' ? count <= rightNumber : count < rightNumber);
@@ -417,6 +423,7 @@ export default {
 	setFallback,
 	getFallback,
 	isFallback,
+	setReturnKeyIfNotFound,
 	__,
 	trans_choice,
 	t: __,

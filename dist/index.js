@@ -1,15 +1,16 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.laralang = factory());
-}(this, (function () { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.laralang = {})));
+}(this, (function (exports) { 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var data = {
 	dictionnaries: {},
 	locale: 'en',
-	fallback: 'en'
+	fallback: 'en',
+	returnKeyIfNotFound: false
 };
 
 function addDictionnaries() {
@@ -80,6 +81,13 @@ function trans_choice(key, count) {
 	return text;
 }
 
+function setReturnKeyIfNotFound() {
+	var bool = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+	data.returnKeyIfNotFound = bool;
+	return data.returnKeyIfNotFound;
+}
+
 function getText(key) {
 	var locale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : data.locale;
 
@@ -102,7 +110,7 @@ function getText(key) {
 		}
 	}
 
-	return null;
+	return data.returnKeyIfNotFound ? key : null;
 }
 
 function replaceParameters(text) {
@@ -380,12 +388,26 @@ var index = {
 	setFallback: setFallback,
 	getFallback: getFallback,
 	isFallback: isFallback,
+	setReturnKeyIfNotFound: setReturnKeyIfNotFound,
 	__: __,
 	trans_choice: trans_choice,
 	t: __,
 	tc: trans_choice
 };
 
-return index;
+exports.addDictionnaries = addDictionnaries;
+exports.addDictionnary = addDictionnary;
+exports.setLocale = setLocale;
+exports.getLocale = getLocale;
+exports.isLocale = isLocale;
+exports.setFallback = setFallback;
+exports.getFallback = getFallback;
+exports.isFallback = isFallback;
+exports.__ = __;
+exports.trans_choice = trans_choice;
+exports.setReturnKeyIfNotFound = setReturnKeyIfNotFound;
+exports['default'] = index;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
