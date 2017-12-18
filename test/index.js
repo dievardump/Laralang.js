@@ -30,5 +30,5 @@ console.log(trans_choice('intervals', 10));
 console.log(__('foo.bar'));
 
 console.log(__('a.b.c.d'));
-lang.setReturnKeyIfNotFound('true');
+lang.setReturnKeyIfNotFound(true);
 console.log(__('a.b.c.d'));
