@@ -1,51 +1,73 @@
-const data = {
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+var data = {
 	dictionnaries: {},
 	locale: "en",
 	fallback: "en",
 	returnKeyIfNotFound: false
 };
 
-export function addDictionnaries(dictionnaries = {}) {
-	Object.keys(dictionnaries).forEach(locale => {
+function addDictionnaries() {
+	var dictionnaries = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	Object.keys(dictionnaries).forEach(function (locale) {
 		addDictionnary(locale, dictionnaries[locale]);
 	});
 }
 
-export function addDictionnary(locale, dictionnary = {}) {
-	data.dictionnaries[locale] = {
-		...data.dictionnaries[locale],
-		...dictionnary
-	};
+function addDictionnary(locale) {
+	var dictionnary = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+	data.dictionnaries[locale] = _extends({}, data.dictionnaries[locale], dictionnary);
 
 	return data.dictionnaries[locale];
 }
 
-export function setLocale(locale = data.locale) {
+function setLocale() {
+	var locale = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : data.locale;
+
 	data.locale = locale;
 }
 
-export function getLocale() {
+function getLocale() {
 	return data.locale;
 }
 
-export function isLocale(locale) {
+function isLocale(locale) {
 	return locale === data.locale;
 }
 
-export function setFallback(fallback = data.fallback) {
+function setFallback() {
+	var fallback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : data.fallback;
+
 	data.fallback = fallback;
 }
 
-export function getFallback() {
+function getFallback() {
 	return data.fallback;
 }
 
-export function isFallback(fallback) {
+function isFallback(fallback) {
 	return fallback === data.fallback;
 }
 
-export function __(key, params = {}, locale = data.locale) {
-	let text = getText(key, locale);
+function __(key) {
+	var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	var locale = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : data.locale;
+
+	var text = getText(key, locale);
 	if (null !== text) {
 		text = replaceParameters(text, params);
 	}
@@ -53,8 +75,11 @@ export function __(key, params = {}, locale = data.locale) {
 	return text;
 }
 
-export function trans_choice(key, count, params = {}, locale = data.locale) {
-	let text = getText(key, locale);
+function trans_choice(key, count) {
+	var params = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+	var locale = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : data.locale;
+
+	var text = getText(key, locale);
 	if (null !== text) {
 		text = selectChoice(text, count, locale);
 		text = replaceParameters(text, params);
@@ -62,21 +87,25 @@ export function trans_choice(key, count, params = {}, locale = data.locale) {
 	return text;
 }
 
-export function setReturnKeyIfNotFound(bool = false) {
+function setReturnKeyIfNotFound() {
+	var bool = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
 	data.returnKeyIfNotFound = bool;
 	return data.returnKeyIfNotFound;
 }
 
-function getText(key, locale = data.locale) {
-	const locales = [locale];
+function getText(key) {
+	var locale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : data.locale;
+
+	var locales = [locale];
 	if (!isFallback(locale)) {
 		locales.push(getFallback());
 	}
 
 	while (locales.length) {
-		let dictionnary = data.dictionnaries[locales.shift()];
+		var dictionnary = data.dictionnaries[locales.shift()];
 		if (undefined !== dictionnary) {
-			let keys = key.split(".");
+			var keys = key.split(".");
 			while (keys.length && dictionnary) {
 				dictionnary = dictionnary[keys.shift()];
 			}
@@ -90,26 +119,32 @@ function getText(key, locale = data.locale) {
 	return data.returnKeyIfNotFound ? key : null;
 }
 
-function replaceParameters(text, params = {}) {
-	const keys = Object.keys(params).sort((a, b) => b.length - a.length);
-	keys.forEach(key => {
-		text = text.replace(`:${key}`, params[key]);
+function replaceParameters(text) {
+	var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+	var keys = Object.keys(params).sort(function (a, b) {
+		return b.length - a.length;
+	});
+	keys.forEach(function (key) {
+		text = text.replace(":" + key, params[key]);
 	});
 
 	return text;
 }
 
-function selectChoice(text, count, locale = data.locale) {
-	const texts = text.split("|");
+function selectChoice(text, count) {
+	var locale = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : data.locale;
+
+	var texts = text.split("|");
 	if (texts.length === 1) {
 		return texts[0];
 	}
 
-	for (let i = 0; i < texts.length; i++) {
+	for (var i = 0; i < texts.length; i++) {
 		texts[i] = texts[i].trim();
 		if (anyIntervalRegexp.test(texts[i])) {
-			let temp = texts[i].split(" ");
-			let interval = temp.shift();
+			var temp = texts[i].split(" ");
+			var interval = temp.shift();
 			texts[i] = temp.join(" ");
 			if (testInterval(count, interval)) {
 				return texts[i];
@@ -117,7 +152,7 @@ function selectChoice(text, count, locale = data.locale) {
 		}
 	}
 
-	const index = getPluralForm(count, locale);
+	var index = getPluralForm(count, locale);
 	return texts[index] || texts[0];
 }
 
@@ -140,8 +175,8 @@ function convertNumber(str) {
 }
 
 // Derived from: https://github.com/symfony/translation/blob/460390765eb7bb9338a4a323b8a4e815a47541ba/Interval.php
-const intervalRegexp = /^({\s*(\-?\d+(\.\d+)?[\s*,\s*\-?\d+(\.\d+)?]*)\s*})|([\[\]])\s*(-Inf|\*|\-?\d+(\.\d+)?)\s*,\s*(\+?Inf|\*|\-?\d+(\.\d+)?)\s*([\[\]])$/;
-const anyIntervalRegexp = /({\s*(\-?\d+(\.\d+)?[\s*,\s*\-?\d+(\.\d+)?]*)\s*})|([\[\]])\s*(-Inf|\*|\-?\d+(\.\d+)?)\s*,\s*(\+?Inf|\*|\-?\d+(\.\d+)?)\s*([\[\]])/;
+var intervalRegexp = /^({\s*(\-?\d+(\.\d+)?[\s*,\s*\-?\d+(\.\d+)?]*)\s*})|([\[\]])\s*(-Inf|\*|\-?\d+(\.\d+)?)\s*,\s*(\+?Inf|\*|\-?\d+(\.\d+)?)\s*([\[\]])$/;
+var anyIntervalRegexp = /({\s*(\-?\d+(\.\d+)?[\s*,\s*\-?\d+(\.\d+)?]*)\s*})|([\[\]])\s*(-Inf|\*|\-?\d+(\.\d+)?)\s*,\s*(\+?Inf|\*|\-?\d+(\.\d+)?)\s*([\[\]])/;
 
 /**
  * From the Symfony\Component\Translation\Interval Docs
@@ -168,40 +203,33 @@ function testInterval(count, interval) {
 
 	interval = interval.trim();
 
-	let matches = interval.match(intervalRegexp);
+	var matches = interval.match(intervalRegexp);
 	if (!matches) {
 		throw "Invalid interval: " + interval;
 	}
 
 	if (matches[2]) {
-		const items = matches[2].split(",");
-		for (let i = 0; i < items.length; i++) {
+		var items = matches[2].split(",");
+		for (var i = 0; i < items.length; i++) {
 			if (parseInt(items[i], 10) === count) {
 				return true;
 			}
 		}
 	} else {
 		// Remove falsy values.
-		matches = matches.filter(function(match) {
+		matches = matches.filter(function (match) {
 			return !!match;
 		});
 
-		const leftDelimiter = matches[1];
-		let leftNumber = convertNumber(matches[2]);
+		var leftDelimiter = matches[1];
+		var leftNumber = convertNumber(matches[2]);
 		if (leftNumber === Infinity) {
 			leftNumber = -Infinity;
 		}
-		const rightNumber = convertNumber(matches[3]);
-		const rightDelimiter = matches[4];
+		var rightNumber = convertNumber(matches[3]);
+		var rightDelimiter = matches[4];
 
-		return (
-			(leftDelimiter === "["
-				? count >= leftNumber
-				: count > leftNumber) &&
-			(rightDelimiter === "]"
-				? count <= rightNumber
-				: count < rightNumber)
-		);
+		return (leftDelimiter === "[" ? count >= leftNumber : count > leftNumber) && (rightDelimiter === "]" ? count <= rightNumber : count < rightNumber);
 	}
 
 	return false;
@@ -316,13 +344,7 @@ function getPluralForm(count, locale) {
 		case "ru":
 		case "sr":
 		case "uk":
-			return count % 10 == 1 && count % 100 != 11
-				? 0
-				: count % 10 >= 2 &&
-				  count % 10 <= 4 &&
-				  (count % 100 < 10 || count % 100 >= 20)
-					? 1
-					: 2;
+			return count % 10 == 1 && count % 100 != 11 ? 0 : count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20) ? 1 : 2;
 
 		case "cs":
 		case "sk":
@@ -332,81 +354,52 @@ function getPluralForm(count, locale) {
 			return count == 1 ? 0 : count == 2 ? 1 : 2;
 
 		case "lt":
-			return count % 10 == 1 && count % 100 != 11
-				? 0
-				: count % 10 >= 2 && (count % 100 < 10 || count % 100 >= 20)
-					? 1
-					: 2;
+			return count % 10 == 1 && count % 100 != 11 ? 0 : count % 10 >= 2 && (count % 100 < 10 || count % 100 >= 20) ? 1 : 2;
 
 		case "sl":
-			return count % 100 == 1
-				? 0
-				: count % 100 == 2
-					? 1
-					: count % 100 == 3 || count % 100 == 4 ? 2 : 3;
+			return count % 100 == 1 ? 0 : count % 100 == 2 ? 1 : count % 100 == 3 || count % 100 == 4 ? 2 : 3;
 
 		case "mk":
 			return count % 10 == 1 ? 0 : 1;
 
 		case "mt":
-			return count == 1
-				? 0
-				: count === 0 || (count % 100 > 1 && count % 100 < 11)
-					? 1
-					: count % 100 > 10 && count % 100 < 20 ? 2 : 3;
+			return count == 1 ? 0 : count === 0 || count % 100 > 1 && count % 100 < 11 ? 1 : count % 100 > 10 && count % 100 < 20 ? 2 : 3;
 
 		case "lv":
-			return count === 0
-				? 0
-				: count % 10 == 1 && count % 100 != 11 ? 1 : 2;
+			return count === 0 ? 0 : count % 10 == 1 && count % 100 != 11 ? 1 : 2;
 
 		case "pl":
-			return count == 1
-				? 0
-				: count % 10 >= 2 &&
-				  count % 10 <= 4 &&
-				  (count % 100 < 12 || count % 100 > 14)
-					? 1
-					: 2;
+			return count == 1 ? 0 : count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 12 || count % 100 > 14) ? 1 : 2;
 
 		case "cy":
-			return count == 1
-				? 0
-				: count == 2 ? 1 : count == 8 || count == 11 ? 2 : 3;
+			return count == 1 ? 0 : count == 2 ? 1 : count == 8 || count == 11 ? 2 : 3;
 
 		case "ro":
-			return count == 1
-				? 0
-				: count === 0 || (count % 100 > 0 && count % 100 < 20) ? 1 : 2;
+			return count == 1 ? 0 : count === 0 || count % 100 > 0 && count % 100 < 20 ? 1 : 2;
 
 		case "ar":
-			return count === 0
-				? 0
-				: count == 1
-					? 1
-					: count == 2
-						? 2
-						: count % 100 >= 3 && count % 100 <= 10
-							? 3
-							: count % 100 >= 11 && count % 100 <= 99 ? 4 : 5;
+			return count === 0 ? 0 : count == 1 ? 1 : count == 2 ? 2 : count % 100 >= 3 && count % 100 <= 10 ? 3 : count % 100 >= 11 && count % 100 <= 99 ? 4 : 5;
 
 		default:
 			return count === 1 ? 0 : 1;
 	}
 }
 
-export default {
-	addDictionnaries,
-	addDictionnary,
-	setLocale,
-	getLocale,
-	isLocale,
-	setFallback,
-	getFallback,
-	isFallback,
-	setReturnKeyIfNotFound,
-	__,
-	trans_choice,
+var index = {
+	addDictionnaries: addDictionnaries,
+	addDictionnary: addDictionnary,
+	setLocale: setLocale,
+	getLocale: getLocale,
+	isLocale: isLocale,
+	setFallback: setFallback,
+	getFallback: getFallback,
+	isFallback: isFallback,
+	setReturnKeyIfNotFound: setReturnKeyIfNotFound,
+	__: __,
+	trans_choice: trans_choice,
 	t: __,
 	tc: trans_choice
 };
+
+export { addDictionnaries, addDictionnary, setLocale, getLocale, isLocale, setFallback, getFallback, isFallback, __, trans_choice, setReturnKeyIfNotFound };
+export default index;

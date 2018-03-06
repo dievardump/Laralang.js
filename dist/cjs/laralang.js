@@ -1,15 +1,25 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(factory((global.laralang = {})));
-}(this, (function (exports) { 'use strict';
+'use strict';
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
 
 var data = {
 	dictionnaries: {},
-	locale: 'en',
-	fallback: 'en',
+	locale: "en",
+	fallback: "en",
 	returnKeyIfNotFound: false
 };
 
@@ -99,7 +109,7 @@ function getText(key) {
 	while (locales.length) {
 		var dictionnary = data.dictionnaries[locales.shift()];
 		if (undefined !== dictionnary) {
-			var keys = key.split('.');
+			var keys = key.split(".");
 			while (keys.length && dictionnary) {
 				dictionnary = dictionnary[keys.shift()];
 			}
@@ -120,7 +130,7 @@ function replaceParameters(text) {
 		return b.length - a.length;
 	});
 	keys.forEach(function (key) {
-		text = text.replace(':' + key, params[key]);
+		text = text.replace(":" + key, params[key]);
 	});
 
 	return text;
@@ -129,7 +139,7 @@ function replaceParameters(text) {
 function selectChoice(text, count) {
 	var locale = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : data.locale;
 
-	var texts = text.split('|');
+	var texts = text.split("|");
 	if (texts.length === 1) {
 		return texts[0];
 	}
@@ -137,9 +147,9 @@ function selectChoice(text, count) {
 	for (var i = 0; i < texts.length; i++) {
 		texts[i] = texts[i].trim();
 		if (anyIntervalRegexp.test(texts[i])) {
-			var temp = texts[i].split(' ');
+			var temp = texts[i].split(" ");
 			var interval = temp.shift();
-			texts[i] = temp.join(' ');
+			texts[i] = temp.join(" ");
 			if (testInterval(count, interval)) {
 				return texts[i];
 			}
@@ -153,16 +163,16 @@ function selectChoice(text, count) {
 /*******************************
  * Interval part
  *
- * Taken and modified from https://github.com/rmariuzzo/Lang.js 
+ * Taken and modified from https://github.com/rmariuzzo/Lang.js
  *
  * The MIT License (MIT)
  *
  * Copyright (c) 2015-present Rubens Mariuzzo
  ******************************/
 function convertNumber(str) {
-	if (str === '-Inf') {
+	if (str === "-Inf") {
 		return -Infinity;
-	} else if (str === '+Inf' || str === 'Inf' || str === '*') {
+	} else if (str === "+Inf" || str === "Inf" || str === "*") {
 		return Infinity;
 	}
 	return parseInt(str, 10);
@@ -191,19 +201,19 @@ var anyIntervalRegexp = /({\s*(\-?\d+(\.\d+)?[\s*,\s*\-?\d+(\.\d+)?]*)\s*})|([\[
  * Beside numbers, you can use -Inf and +Inf for the infinite.
  */
 function testInterval(count, interval) {
-	if (typeof interval !== 'string') {
-		throw 'Invalid interval: should be a string.';
+	if (typeof interval !== "string") {
+		throw "Invalid interval: should be a string.";
 	}
 
 	interval = interval.trim();
 
 	var matches = interval.match(intervalRegexp);
 	if (!matches) {
-		throw 'Invalid interval: ' + interval;
+		throw "Invalid interval: " + interval;
 	}
 
 	if (matches[2]) {
-		var items = matches[2].split(',');
+		var items = matches[2].split(",");
 		for (var i = 0; i < items.length; i++) {
 			if (parseInt(items[i], 10) === count) {
 				return true;
@@ -223,7 +233,7 @@ function testInterval(count, interval) {
 		var rightNumber = convertNumber(matches[3]);
 		var rightDelimiter = matches[4];
 
-		return (leftDelimiter === '[' ? count >= leftNumber : count > leftNumber) && (rightDelimiter === ']' ? count <= rightNumber : count < rightNumber);
+		return (leftDelimiter === "[" ? count >= leftNumber : count > leftNumber) && (rightDelimiter === "]" ? count <= rightNumber : count < rightNumber);
 	}
 
 	return false;
@@ -236,7 +246,7 @@ function testInterval(count, interval) {
 /**
  * Returns the plural position to use for the given locale and number.
  *
- * Taken and modified from https://github.com/rmariuzzo/Lang.js 
+ * Taken and modified from https://github.com/rmariuzzo/Lang.js
  *
  * The plural rules are derived from code of the Zend Framework (2010-09-25),
  * which is subject to the new BSD license (http://framework.zend.com/license/new-bsd).
@@ -248,130 +258,130 @@ function testInterval(count, interval) {
  */
 function getPluralForm(count, locale) {
 	switch (locale) {
-		case 'az':
-		case 'bo':
-		case 'dz':
-		case 'id':
-		case 'ja':
-		case 'jv':
-		case 'ka':
-		case 'km':
-		case 'kn':
-		case 'ko':
-		case 'ms':
-		case 'th':
-		case 'tr':
-		case 'vi':
-		case 'zh':
+		case "az":
+		case "bo":
+		case "dz":
+		case "id":
+		case "ja":
+		case "jv":
+		case "ka":
+		case "km":
+		case "kn":
+		case "ko":
+		case "ms":
+		case "th":
+		case "tr":
+		case "vi":
+		case "zh":
 			return 0;
 
-		case 'af':
-		case 'bn':
-		case 'bg':
-		case 'ca':
-		case 'da':
-		case 'de':
-		case 'el':
-		case 'en':
-		case 'eo':
-		case 'es':
-		case 'et':
-		case 'eu':
-		case 'fa':
-		case 'fi':
-		case 'fo':
-		case 'fur':
-		case 'fy':
-		case 'gl':
-		case 'gu':
-		case 'ha':
-		case 'he':
-		case 'hu':
-		case 'is':
-		case 'it':
-		case 'ku':
-		case 'lb':
-		case 'ml':
-		case 'mn':
-		case 'mr':
-		case 'nah':
-		case 'nb':
-		case 'ne':
-		case 'nl':
-		case 'nn':
-		case 'no':
-		case 'om':
-		case 'or':
-		case 'pa':
-		case 'pap':
-		case 'ps':
-		case 'pt':
-		case 'so':
-		case 'sq':
-		case 'sv':
-		case 'sw':
-		case 'ta':
-		case 'te':
-		case 'tk':
-		case 'ur':
-		case 'zu':
+		case "af":
+		case "bn":
+		case "bg":
+		case "ca":
+		case "da":
+		case "de":
+		case "el":
+		case "en":
+		case "eo":
+		case "es":
+		case "et":
+		case "eu":
+		case "fa":
+		case "fi":
+		case "fo":
+		case "fur":
+		case "fy":
+		case "gl":
+		case "gu":
+		case "ha":
+		case "he":
+		case "hu":
+		case "is":
+		case "it":
+		case "ku":
+		case "lb":
+		case "ml":
+		case "mn":
+		case "mr":
+		case "nah":
+		case "nb":
+		case "ne":
+		case "nl":
+		case "nn":
+		case "no":
+		case "om":
+		case "or":
+		case "pa":
+		case "pap":
+		case "ps":
+		case "pt":
+		case "so":
+		case "sq":
+		case "sv":
+		case "sw":
+		case "ta":
+		case "te":
+		case "tk":
+		case "ur":
+		case "zu":
 			return count == 1 ? 0 : 1;
 
-		case 'am':
-		case 'bh':
-		case 'fil':
-		case 'fr':
-		case 'gun':
-		case 'hi':
-		case 'hy':
-		case 'ln':
-		case 'mg':
-		case 'nso':
-		case 'xbr':
-		case 'ti':
-		case 'wa':
+		case "am":
+		case "bh":
+		case "fil":
+		case "fr":
+		case "gun":
+		case "hi":
+		case "hy":
+		case "ln":
+		case "mg":
+		case "nso":
+		case "xbr":
+		case "ti":
+		case "wa":
 			return count === 0 || count === 1 ? 0 : 1;
 
-		case 'be':
-		case 'bs':
-		case 'hr':
-		case 'ru':
-		case 'sr':
-		case 'uk':
+		case "be":
+		case "bs":
+		case "hr":
+		case "ru":
+		case "sr":
+		case "uk":
 			return count % 10 == 1 && count % 100 != 11 ? 0 : count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20) ? 1 : 2;
 
-		case 'cs':
-		case 'sk':
+		case "cs":
+		case "sk":
 			return count == 1 ? 0 : count >= 2 && count <= 4 ? 1 : 2;
 
-		case 'ga':
+		case "ga":
 			return count == 1 ? 0 : count == 2 ? 1 : 2;
 
-		case 'lt':
+		case "lt":
 			return count % 10 == 1 && count % 100 != 11 ? 0 : count % 10 >= 2 && (count % 100 < 10 || count % 100 >= 20) ? 1 : 2;
 
-		case 'sl':
+		case "sl":
 			return count % 100 == 1 ? 0 : count % 100 == 2 ? 1 : count % 100 == 3 || count % 100 == 4 ? 2 : 3;
 
-		case 'mk':
+		case "mk":
 			return count % 10 == 1 ? 0 : 1;
 
-		case 'mt':
+		case "mt":
 			return count == 1 ? 0 : count === 0 || count % 100 > 1 && count % 100 < 11 ? 1 : count % 100 > 10 && count % 100 < 20 ? 2 : 3;
 
-		case 'lv':
+		case "lv":
 			return count === 0 ? 0 : count % 10 == 1 && count % 100 != 11 ? 1 : 2;
 
-		case 'pl':
+		case "pl":
 			return count == 1 ? 0 : count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 12 || count % 100 > 14) ? 1 : 2;
 
-		case 'cy':
+		case "cy":
 			return count == 1 ? 0 : count == 2 ? 1 : count == 8 || count == 11 ? 2 : 3;
 
-		case 'ro':
+		case "ro":
 			return count == 1 ? 0 : count === 0 || count % 100 > 0 && count % 100 < 20 ? 1 : 2;
 
-		case 'ar':
+		case "ar":
 			return count === 0 ? 0 : count == 1 ? 1 : count == 2 ? 2 : count % 100 >= 3 && count % 100 <= 10 ? 3 : count % 100 >= 11 && count % 100 <= 99 ? 4 : 5;
 
 		default:
@@ -407,7 +417,3 @@ exports.__ = __;
 exports.trans_choice = trans_choice;
 exports.setReturnKeyIfNotFound = setReturnKeyIfNotFound;
 exports['default'] = index;
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-})));
