@@ -14,7 +14,6 @@
   "scripts": {
     "clean": "rimraf dist",
     "format": "prettier --write \"{src,test}/**/*.js\"",
-    "format:check": "prettier --list-different \"{src,test}/**/*.js\"",
     "test": "cross-env BABEL_ENV=test jest",
     "build": "npm run build:es && npm run build:commonjs && npm run build:umd && npm run build:umd:min",
     "build:commonjs": "cross-env NODE_ENV=cjs rollup -c -o dist/cjs/laralang.js",

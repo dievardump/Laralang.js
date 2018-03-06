@@ -28,7 +28,7 @@ export function getDictionnaries() {
 }
 
 export function useDictionnary(use = true) {
-	return data.useDictionnary = use;
+	return (data.useDictionnary = use);
 }
 
 export function setLocale(locale = data.locale) {
