@@ -34,6 +34,15 @@ describe("configuration", () => {
 		expect(lang.isFallback("fr")).toBe(true);
 		expect(lang.isFallback("en")).toBe(false);
 	});
+
+	it('ReturnKeyIfNotFound is disabled', () => {
+		expect(__('a.b.c.d')).toBe(null);
+	});
+
+	it('ReturnKeyIfNotFound is enabled', () => {
+		lang.setReturnKeyIfNotFound(true);
+		expect(__('a.b.c.d')).toBe('a.b.c.d');
+	});
 });
 
 describe("usage", () => {
@@ -87,13 +96,3 @@ describe('Intervals and Set selection', () => {
 	});
 });
 
-describe('ReturnKeyIfNotFound', () => {
-	it('ReturnKeyIfNotFound is disabled', () => {
-		expect(__('a.b.c.d')).toBe(null);
-	});
-
-	it('ReturnKeyIfNotFound is enabled', () => {
-		lang.setReturnKeyIfNotFound(true);
-		expect(__('a.b.c.d')).toBe('a.b.c.d');
-	});
-})

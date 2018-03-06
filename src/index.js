@@ -2,7 +2,9 @@ const data = {
 	dictionnaries: {},
 	locale: "en",
 	fallback: "en",
-	returnKeyIfNotFound: false
+	returnKeyIfNotFound: false,
+	useDictionnary: true,
+	cache: {}
 };
 
 export function addDictionnaries(dictionnaries = {}) {
@@ -12,6 +14,7 @@ export function addDictionnaries(dictionnaries = {}) {
 }
 
 export function addDictionnary(locale, dictionnary = {}) {
+	data.cache[locale] = {};
 	data.dictionnaries[locale] = {
 		...data.dictionnaries[locale],
 		...dictionnary
@@ -22,6 +25,10 @@ export function addDictionnary(locale, dictionnary = {}) {
 
 export function getDictionnaries() {
 	return data.dictionnaries;
+}
+
+export function useDictionnary(use = true) {
+	return data.useDictionnary = use;
 }
 
 export function setLocale(locale = data.locale) {
@@ -72,6 +79,14 @@ export function setReturnKeyIfNotFound(bool = false) {
 }
 
 function getText(key, locale = data.locale) {
+	if (data.useDictionnary === false) {
+		return key;
+	}
+
+	if (data.cache[locale] && data.cache[locale][key]) {
+		return data.cache[locale][key];
+	}
+
 	const locales = [locale];
 	if (!isFallback(locale)) {
 		locales.push(getFallback());
@@ -86,12 +101,15 @@ function getText(key, locale = data.locale) {
 			}
 
 			if (typeof dictionnary === "string") {
+				data.cache[locale][key] = dictionnary;
 				return dictionnary;
 			}
 		}
 	}
 
-	return data.returnKeyIfNotFound ? key : null;
+	const result = data.returnKeyIfNotFound ? key : null;
+	data.cache[locale][key] = result;
+	return result;
 }
 
 function replaceParameters(text, params = {}) {
@@ -403,6 +421,7 @@ export default {
 	addDictionnaries,
 	getDictionnaries,
 	addDictionnary,
+	useDictionnary,
 	setLocale,
 	getLocale,
 	isLocale,

@@ -22,7 +22,9 @@ var data = {
 	dictionnaries: {},
 	locale: "en",
 	fallback: "en",
-	returnKeyIfNotFound: false
+	returnKeyIfNotFound: false,
+	useDictionnary: true,
+	cache: {}
 };
 
 function addDictionnaries() {
@@ -36,6 +38,7 @@ function addDictionnaries() {
 function addDictionnary(locale) {
 	var dictionnary = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+	data.cache[locale] = {};
 	data.dictionnaries[locale] = _extends({}, data.dictionnaries[locale], dictionnary);
 
 	return data.dictionnaries[locale];
@@ -43,6 +46,12 @@ function addDictionnary(locale) {
 
 function getDictionnaries() {
 	return data.dictionnaries;
+}
+
+function useDictionnary() {
+	var use = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+	return data.useDictionnary = use;
 }
 
 function setLocale() {
@@ -107,6 +116,14 @@ function setReturnKeyIfNotFound() {
 function getText(key) {
 	var locale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : data.locale;
 
+	if (data.useDictionnary === false) {
+		return key;
+	}
+
+	if (data.cache[locale] && data.cache[locale][key]) {
+		return data.cache[locale][key];
+	}
+
 	var locales = [locale];
 	if (!isFallback(locale)) {
 		locales.push(getFallback());
@@ -121,12 +138,15 @@ function getText(key) {
 			}
 
 			if (typeof dictionnary === "string") {
+				data.cache[locale][key] = dictionnary;
 				return dictionnary;
 			}
 		}
 	}
 
-	return data.returnKeyIfNotFound ? key : null;
+	var result = data.returnKeyIfNotFound ? key : null;
+	data.cache[locale][key] = result;
+	return result;
 }
 
 function replaceParameters(text) {
@@ -399,6 +419,7 @@ var index = {
 	addDictionnaries: addDictionnaries,
 	getDictionnaries: getDictionnaries,
 	addDictionnary: addDictionnary,
+	useDictionnary: useDictionnary,
 	setLocale: setLocale,
 	getLocale: getLocale,
 	isLocale: isLocale,
@@ -415,6 +436,7 @@ var index = {
 exports.addDictionnaries = addDictionnaries;
 exports.addDictionnary = addDictionnary;
 exports.getDictionnaries = getDictionnaries;
+exports.useDictionnary = useDictionnary;
 exports.setLocale = setLocale;
 exports.getLocale = getLocale;
 exports.isLocale = isLocale;
