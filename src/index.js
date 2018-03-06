@@ -20,6 +20,10 @@ export function addDictionnary(locale, dictionnary = {}) {
 	return data.dictionnaries[locale];
 }
 
+export function getDictionnaries() {
+	return data.dictionnaries;
+}
+
 export function setLocale(locale = data.locale) {
 	data.locale = locale;
 }
@@ -397,6 +401,7 @@ function getPluralForm(count, locale) {
 
 export default {
 	addDictionnaries,
+	getDictionnaries,
 	addDictionnary,
 	setLocale,
 	getLocale,

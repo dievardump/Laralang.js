@@ -35,6 +35,10 @@ function addDictionnary(locale) {
 	return data.dictionnaries[locale];
 }
 
+function getDictionnaries() {
+	return data.dictionnaries;
+}
+
 function setLocale() {
 	var locale = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : data.locale;
 
@@ -387,6 +391,7 @@ function getPluralForm(count, locale) {
 
 var index = {
 	addDictionnaries: addDictionnaries,
+	getDictionnaries: getDictionnaries,
 	addDictionnary: addDictionnary,
 	setLocale: setLocale,
 	getLocale: getLocale,
@@ -401,5 +406,5 @@ var index = {
 	tc: trans_choice
 };
 
-export { addDictionnaries, addDictionnary, setLocale, getLocale, isLocale, setFallback, getFallback, isFallback, __, trans_choice, setReturnKeyIfNotFound };
+export { addDictionnaries, addDictionnary, getDictionnaries, setLocale, getLocale, isLocale, setFallback, getFallback, isFallback, __, trans_choice, setReturnKeyIfNotFound };
 export default index;

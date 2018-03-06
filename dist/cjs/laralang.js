@@ -39,6 +39,10 @@ function addDictionnary(locale) {
 	return data.dictionnaries[locale];
 }
 
+function getDictionnaries() {
+	return data.dictionnaries;
+}
+
 function setLocale() {
 	var locale = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : data.locale;
 
@@ -391,6 +395,7 @@ function getPluralForm(count, locale) {
 
 var index = {
 	addDictionnaries: addDictionnaries,
+	getDictionnaries: getDictionnaries,
 	addDictionnary: addDictionnary,
 	setLocale: setLocale,
 	getLocale: getLocale,
@@ -407,6 +412,7 @@ var index = {
 
 exports.addDictionnaries = addDictionnaries;
 exports.addDictionnary = addDictionnary;
+exports.getDictionnaries = getDictionnaries;
 exports.setLocale = setLocale;
 exports.getLocale = getLocale;
 exports.isLocale = isLocale;

@@ -1,3 +1,22 @@
 {
-  "presets": [ ["env", { "modules" : false }], "stage-3"]
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "ie >= 11"
+          ]
+        },
+        "modules": false,
+        "loose": true
+      }
+    ],
+    "stage-0"
+  ],
+  "env": {
+    "test": {
+      "presets": [[ "env", { "loose": true }], "stage-0"]
+    }
+  }
 }
