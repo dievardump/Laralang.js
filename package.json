@@ -2,6 +2,7 @@
   "name": "laralang",
   "version": "0.0.1",
   "description": "Translation with JavaScript // Laravel-like",
+  "npmName": "laralang",
   "main": "dist/cjs/laralang.js",
   "module": "dist/es/laralang.js",
   "files": [
